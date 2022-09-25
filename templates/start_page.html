@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- EXTENDING BASE FILE WITH MENU AND FOOTER -->
+    <!--{% extends "base_page.html" %}-->
+    <!--{% block inpage %}-->
+<!-- CONTENT SECTION -->
+    <p>{{content}}</p>
+    <section class="section_content">
+<!-- LAST 3 POSTS SECTION -->
+        {% if content.last_3 %}
+            <section class="3_posts_section">
+                {% for post in content.last_3 %}
+                    <div class="div_1_of_3">
+                        <h4 class="1_of_3_title">{{post.title}}</h4>
+                        <p class="1_of_3_description">{{post.description}}</p>
+                        <p class="1_of_3_created">{{post.created}}</p>
+                    </div>
+                {% endfor %}
+            </section>
+        {% endif %}
+<!-- QUOTE SECTION -->
+        {% if content.quote %}
+            <section class="quote_section">
+                <div class="div_quote">
+                    <p class="quote_text">{{content.quote.quote}}</p>
+                    <h4 class="quote_author">{{content.quote.author}}</h4>
+
+                    <p class="quote_url">Powered by: <a href="{{content.quote.url}}">Lubimyczytac.pl</a></p>
+                </div>
+            </section>
+        {% endif %}
+
+<!-- BEST 3 POSTS SECTION -->
+        {% if content.best_3 %}
+            <section class="3_posts_section">
+                {% for post in content.best_3 %}
+                    <div class="div_1_of_3">
+                        <h4 class="1_of_3_title">{{post.post.title}}</h4>
+                        <p class="1_of_3_description">{{post.post.description}}</p>
+                        <p class="1_of_3_created">{{post.post.created}}</p>
+                        <p class="1_of_3_likes">Likes: {{post.plus_likes}}</p>
+                    </div>
+                {% endfor %}
+            </section>
+        {% endif %}
+    </section>
+<!--{% endblock inpage %}-->
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- EXTENDING BASE FILE WITH MENU AND FOOTER -->
+    <!--{% extends "base_page.html" %}-->
+    <!--{% block inpage %}-->
+<!-- CONTENT SECTION -->
+    <section class="section_content">
+<!-- POST TITLE -->
+        <section class="section_post_title">
+            <div class="div_post_title">
+                <h1>{{content.post.title}}</h1>
+            </div>
+        </section>
+<!-- PARAGRAPHS -->
+        <section class="section_post">
+            {% for paragraph in content.paragraphs %}
+                <div class="div_post_paragraph">
+                    {% if paragraph.paragraph_type == 'TXT' %}
+                        <p style="{{paragraph.paragraph_style}}">{{paragraph.paragraph_content}}</p>
+                    {% elif paragraph.paragraph_type == 'IMG' %}
+                        <img src="{{paragraph.url}}" style="{{paragraph.paragraph_style}}">
+                    {% endif %}
+                </div>
+            {% endfor %}
+<!-- LIKES TO POST -->
+            <div class="div_post_likes_form">
+                <form name="post_likes_form" method="post">
+                    {% csrf_token %}
+                    {% if content.post_my_like == +1 %}
+                        <button type="submit" name="post_likes_plus_button" value={{content.post.id}} style="background-color: #00FF00;">{{content.post_likes_plus}}</button>
+                        <button type="submit" name="post_likes_minus_button" value={{content.post.id}}>{{content.post_likes_minus}}</button>
+                    {% elif content.post_my_like == -1 %}
+                        <button type="submit" name="post_likes_plus_button" value={{content.post.id}}>{{content.post_likes_plus}}</button>
+                        <button type="submit" name="post_likes_minus_button" value={{content.post.id}} style="background-color: #FF0000;">{{content.post_likes_minus}}</button>
+                    {% else %}
+                        <button type="submit" name="post_likes_plus_button" value={{content.post.id}}>{{content.post_likes_plus}}</button>
+                        <button type="submit" name="post_likes_minus_button" value={{content.post.id}}>{{content.post_likes_minus}}</button>
+                    {% endif %}
+                </form>
+                <p>Created {{content.post.created}}</p>
+                {% if content.post.edited %}
+                    <p>Edited: {{content.post.edited}}</p>
+                {% endif %}
+            </div>
+        </section>
+<!-- ADD COMMENT TO POST -->
+        <section class="section_comments">
+            <div class="div_comment_form">
+                <form method="post">
+                    {% csrf_token %}
+                    <textarea name="comment_content"></textarea>
+                    <button type="submit" name="accept_comment_button">Dodaj komentarz</button>
+                </form>
+            </div>
+
+<!-- MAIN_COMMENT -->
+            {% for main_comment in content.comments %}
+                <div class="div_main_comment">
+
+                    {% if main_comment.comment.id == content.to_edit and content.user.username == main_comment.comment.author.username and main_comment.comment.content %}
+                        <form  method="post">
+                            {% csrf_token %}
+                            <textarea name="comment_content">{{main_comment.comment.content}}</textarea>
+                            <button type="submit" name="accept_comment_button" value="{{main_comment.comment.id}}">Zapisz zmiany</button>
+                        </form>
+                    {% else %}
+                        <div class="div_main_comment_text">
+                            <p>{{main_comment.comment.content}}</p>
+                            <p>{{main_comment.comment.author.username}}</p>
+                            <p>{{main_comment.comment.created}}</p>
+                        </div>
+                    {% endif %}
+<!-- LIKES TO MAIN_COMMENT -->
+                    <div class="div_main_comment_likes_form">
+                        <form name="main_comment_likes_form" method="post">
+                            {% csrf_token %}
+                            {% if main_comment.comment_my_like == +1 %}
+                                <button type="submit" name="comment_likes_plus_button" value='{{main_comment.comment.id}}' style="background-color: #00FF00;">{{main_comment.comment_likes_plus}}</button>
+                                <button type="submit" name="comment_likes_minus_button" value='{{main_comment.comment.id}}'>{{main_comment.comment_likes_minus}}</button>
+                            {% elif main_comment.comment_my_like == -1 %}
+                                <button type="submit" name="comment_likes_plus_button" value='{{main_comment.comment.id}}'>{{main_comment.comment_likes_plus}}</button>
+                                <button type="submit" name="comment_likes_minus_button" value='{{main_comment.comment.id}}' style="background-color: #FF0000;">{{main_comment.comment_likes_minus}}</button>
+                            {% else %}
+                                <button type="submit" name="comment_likes_plus_button" value='{{main_comment.comment.id}}'>{{main_comment.comment_likes_plus}}</button>
+                                <button type="submit" name="comment_likes_minus_button" value='{{main_comment.comment.id}}'>{{main_comment.comment_likes_minus}}</button>
+                            {% endif %}
+<!-- EDIT/DELETE MAIN_COMMENT -->
+                            {% if content.user.username == main_comment.comment.author.username %}
+                                {% if not content.to_edit %}
+                                    <button type="submit" name="edit_comment_button" value="{{main_comment.comment.id}}">Edytuj</button>
+                                    <button type="submit" name="delete_comment_button" value="{{main_comment.comment.id}}">Usuń</button>
+                                {% endif %}
+                            {% endif %}
+                            <button type="submit" name="add_comment_button" value="{{main_comment.comment.id}}">Komentuj</button>
+                        </form>
+<!-- EDIT FIELD OF MAIN_COMMENT -->
+                        {% if content.to_edit == main_comment.comment.id and not main_comment.comment.content %}
+                            <div class="div_comment_form">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <textarea name="comment_content"></textarea>
+                                    <button type="submit" name="accept_comment_button">Dodaj komentarz</button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+<!-- COMMENTS_TO_COMMENT -->
+                {% for comment_to_comment in main_comment.comments_to_comment %}
+                    <div class="div_comment_to_comment" style="margin-left: 30px;">
+                        {% if comment_to_comment.comment_to_comment.id == content.to_edit and content.user.username == comment_to_comment.comment_to_comment.author.username and comment_to_comment.comment_to_comment.content %}
+                            <form  method="post">
+                                {% csrf_token %}
+                                <textarea name="comment_content">{{comment_to_comment.comment_to_comment.content}}</textarea>
+                                <button type="submit" name="accept_comment_button" value="{{comment_to_comment.comment_to_comment.id}}">Zapisz zmiany</button>
+                            </form>
+                        {% else %}
+                            <div class="div_comment_to_comment_text">
+                                <p>{{comment_to_comment.comment_to_comment.content}}</p>
+                                <p>{{comment_to_comment.comment_to_comment.author.username}}</p>
+                                <p>{{comment_to_comment.comment_to_comment.created}}</p>
+                            </div>
+                        {% endif %}
+<!-- LIKES COMMENTS_TO_COMMENT -->
+                        <div class="div_comment_to_comment_likes_form">
+                            <form name="comment_to_comment_likes_form" method="post">
+                                {% csrf_token %}
+                                {% if comment_to_comment.comment_to_comment_my_like == +1 %}
+                                    <button type="submit" name="comment_likes_plus_button" value='{{comment_to_comment.comment_to_comment.id}}' style="background-color: #00FF00;">{{comment_to_comment.comment_to_comment_likes_plus}}</button>
+                                    <button type="submit" name="comment_likes_minus_button" value='{{comment_to_comment.comment_to_comment.id}}'>{{comment_to_comment.comment_to_comment_likes_minus}}</button>
+                                {% elif comment_to_comment.comment_to_comment_my_like == -1 %}
+                                    <button type="submit" name="comment_likes_plus_button" value='{{comment_to_comment.comment_to_comment.id}}'>{{comment_to_comment.comment_to_comment_likes_plus}}</button>
+                                    <button type="submit" name="comment_likes_minus_button" value='{{comment_to_comment.comment_to_comment.id}}' style="background-color: #FF0000;">{{comment_to_comment.comment_to_comment_likes_minus}}</button>
+                                {% else %}
+                                    <button type="submit" name="comment_likes_plus_button" value='{{comment_to_comment.comment_to_comment.id}}'>{{comment_to_comment.comment_to_comment_likes_plus}}</button>
+                                    <button type="submit" name="comment_likes_minus_button" value='{{comment_to_comment.comment_to_comment.id}}'>{{comment_to_comment.comment_to_comment_likes_minus}}</button>
+                                {% endif %}
+<!-- EDIT/DELETE COMMENTS_TO_COMMENT -->
+                                {% if content.user.username == comment_to_comment.comment_to_comment.author.username %}
+                                    {% if not content.to_edit %}
+                                        <button type="submit" name="edit_comment_button" value="{{comment_to_comment.comment_to_comment.id}}">Edytuj</button>
+                                        <button type="submit" name="delete_comment_button" value="{{comment_to_comment.comment_to_comment.id}}">Usuń</button>
+                                    {% endif %}
+                                {% endif %}
+                            </form>
+                        </div>
+
+                        {% if content.to_edit == comment_to_comment.comment_to_comment.id and not comment_to_comment.comment_to_comment.content %}
+                            <div class="div_comment_form">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <textarea name="comment_content"></textarea>
+                                    <button type="submit" name="accept_comment_button" value="{{comment_to_comment.comment_to_comment.id}}">Dodaj komentarz</button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+            {% endfor %}
+        </section>
+
+    </section>
+<!--{% endblock inpage %}-->
+</body>
+</html>

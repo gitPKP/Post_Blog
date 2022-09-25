@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- EXTENDING BASE FILE WITH MENU AND FOOTER -->
+    <!--{% extends "base_page.html" %}
+    {% block inpage %}-->
+<!-- CONTENT SECTION -->
+    <section class="section_content">
+        <h1 class="title_page">CREATOR POSTÓW</h1>
+        <section class="section_post_title">
+             <form method="post" name=title_form">
+                {% csrf_token %}
+                 <p>Tytuł:</p>
+                 <input type="text" name="title" value="{{content.post.title}}">
+                 <p>Opis:</p>
+                 <input type="text" name="description" value="{{content.post.description}}">
+                 <p>Obrazek tła:</p>
+                 <input type="text" name="backgroung_image" value="{{content.post.background_image}}">
+
+
+                <button type="submit" name="accept_title_form_button">Zapisz</button>
+            </form>
+        </section>
+
+
+        <section class="section_post_paragraphs">
+            {% for paragraph in content.paragraphs %}
+                <section class="section_post_paragraph">
+                    <div class="div_post_paragraph_content">
+                        {% if paragraph.paragraph_number == content.to_edit %}
+                            <form method="post" name="edit_paragraph_form">
+                            {% csrf_token %}
+                                <div class="div_edit_text_field">
+                                    {% if paragraph.temp_paragraph_type == 'TXT' %}
+                                        <p>{{paragraph.temp_paragraph_style}}</p>
+                                        <textarea name="paragraph_new_content" style="{{paragraph.temp_paragraph_style}}">{{paragraph.temp_paragraph_content}}</textarea>
+                                    {% elif paragraph.temp_paragraph_type == 'IMG' %}
+                                        <textarea name="paragraph_new_url">{{paragraph.temp_url}}</textarea>
+                                    {% endif %}
+                                </div>
+                                <div class="div_edit_parameters_field">
+                                    {% if paragraph.temp_paragraph_type == 'TXT' %}
+                                        <button type="submit" name="TXT_type_paragraph_button" value="TXT" style="background-color: #00FF00;">TXT</button>
+                                        <button type="submit" name="IMG_type_paragraph_button" value="IMG">IMG</button>
+
+                                        {% if content.styles.0 %}
+                                            <button type="submit" name="bold_TXT_button" value="font-weight: bold" style="background-color: #00FF00;">B</button>
+                                        {% else %}
+                                            <button type="submit" name="bold_TXT_button" value="font-weight: bold" >B</button>
+                                        {% endif %}
+                                        {% if content.styles.1 %}
+                                            <button type="submit" name="underline_TXT_button" value="text-decoration: underline" style="background-color: #00FF00;">_</button>
+                                        {% else %}
+                                            <button type="submit" name="underline_TXT_button" value="text-decoration: underline">_</button>
+                                        {% endif %}
+                                        {% if content.styles.2 %}
+                                            <button type="submit" name="italic_TXT_button" value="font-style: italic;" style="background-color: #00FF00;">/</button>
+                                        {% else %}
+                                            <button type="submit" name="italic_TXT_button" value="font-style: italic;">/</button>
+                                        {% endif %}
+
+
+
+
+
+                                        <input type="text" name="bold_TXT_button_hidden" value="{{content.styles.0}}">
+                                        <input type="text" name="underline_TXT_button_hidden" value="{{content.styles.1}}">
+                                        <input type="text" name="italic_TXT_button_hidden" value="{{content.styles.2}}">
+
+                                        <select name="font" onchange="this.form.submit()">
+                                            <option value="FONT1">FONT1</option>
+                                            <option value="FONT1">FONT2</option>
+                                        </select>
+                                        <p>Rozmiar:</p>
+                                        <input type="text" name="font_size" onchange="this.form.submit()">
+                                        <p>Kolor czcionki:</p>
+                                        <input type="color" name="font_color" value="{{content.styles.3}}" onchange="this.form.submit()">
+                                        <p>{{content.styles.3}}</p>
+
+                                        <input type="text" name="TXT_style_form" value="{{paragraph.paragraph_number}}" hidden>
+                                        <input type="text" name="paragraph_number" value="{{paragraph.paragraph_number}}" hidden>
+
+
+
+                                    {% elif paragraph.temp_paragraph_type == 'IMG' %}
+                                        {% if 'color%' in content.styles %}
+                                            <p>IT'S</p>
+                                        {% endif %}
+
+
+
+                                        <button type="submit" name="TXT_type_paragraph_button" value="TXT">TXT</button>
+                                        <button type="submit" name="IMG_type_paragraph_button" value="IMG" style="background-color: #00FF00;">IMG</button>
+
+                                        <p>Wysokość:</p>
+                                        <input type="text" name="height_IMG" value="0">
+                                        <p>Szerokość:</p>
+                                        <input type="text" name="width_IMG" value="0">
+                                        <p>Położenie</p>
+                                        <select name="position_IMG">
+                                            <option value="left">Lewo</option>
+                                            <option value="center">Środek</option>
+                                            <option value="right">Prawo</option>
+                                        </select>
+
+                                        <input type="text" name="IMG_style_form" value="{{paragraph.paragraph_number}}" hidden>
+                                        <input type="text" name="paragraph_number" value="{{paragraph.paragraph_number}}" hidden>
+
+                                    {% endif %}
+
+                                    <button type="submit" name="save_changes_in_paragraph" value="paragraph.id">ZAPISZ</button>
+
+                                    <button type="submit" name="reject_changes_in_paragraph" value="paragraph.id">ODRZUĆ</button>
+
+                                </div>
+
+                            </form>
+
+                        {% else %}
+                            {% if paragraph.paragraph_type == 'TXT' %}
+                                <p class="p_post_paragraph_text" style="{{paragraph.paragraph_style}}"><span style="white-space: pre-line">{{paragraph.paragraph_content}}</span></p>
+                            {% elif paragraph.paragraph_type == 'IMG' %}
+                                <img src="{{paragraph.url}}" style="{{paragraph.paragraph_style}}">
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="div_post_paragraph_buttons">
+                        <form method="post" name=paragraph_button_form">
+                            {% csrf_token %}
+                            {% if paragraph.paragraph_number != 1 %}
+                                <button type="submit" name="move_up_paragraph_button" value="{{paragraph.paragraph_number}}">W górę</button>
+                            {% endif %}
+                            {% if not content.to_edit %}
+                                <button type="submit" name="edit_paragraph_button" value="{{paragraph.paragraph_number}}">Edytuj</button>
+                            {% endif %}
+                            <button type="submit" name="delete_paragraph_button" value="{{paragraph.paragraph_number}}">Usuń</button>
+
+                            {% if paragraph.paragraph_number != content.paragraphs|length %}
+                                <button type="submit" name="move_down_paragraph_button" value="{{paragraph.paragraph_number}}">W dół</button>
+                            {% endif %}
+                        </form>
+                    </div>
+                </section>
+            {% endfor %}
+
+        </section>
+        <section class="section_post_buttons">
+            <div class="div_form_buttons">
+                <form method="post" name="post_buttons_form">
+                    {% csrf_token %}
+                    <button type="submit" name="add_paragraph_button" value="True">DODAJ AKAPIT</button>
+                    <button type="submit" name="publish_button" value="True">PUBLIKUJ</button>
+                    <button type="submit" name="show_button" value="True">PODGLĄD</button>
+                    <button type="submit" name="end_for_now_button" value="True">ZAKOŃCZ PRACĘ</button>
+                </form>
+            </div>
+        </section>
+
+
+<!-- MESSAGES SECTION -->
+        {% if messages %}
+            <section class="section_messages">
+                {% for message in messages %}
+                    <p class="p_message">{{ message }}</p><br>
+                {% endfor %}
+            </section>
+        {% endif %}
+    </section>
+
+    <!--{% endblock inpage %}-->
+
+</body>
+</html>

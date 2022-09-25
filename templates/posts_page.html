@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- EXTENDING BASE FILE WITH MENU AND FOOTER -->
+    <!--{% extends "base_page.html" %}-->
+    <!--{% block inpage %}-->
+<!-- CONTENT SECTION -->
+    <p>{{content}}</p>
+    <section class="section_content">
+<!-- FILTERS -->
+        <section class="section_filters">
+            <div class="div_filter_form">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="text" name="title" placeholder="Tytuł">
+                    <input type="text" name="description" placeholder="Opis">
+                    <input type="text" name="author" placeholder="Autor">
+                    <input type="number" name="id" placeholder="Post id">
+                    <p>Od: </p>
+                    <input type="date" name="created_after" placeholder="Data utworzenia od">
+                    <p>Do: </p>
+                    <input type="date" name="created_before" placeholder="Data utworzenia do">
+
+                    <button type="submit" name="filter_button">FILTRUJ</button>
+                </form>
+            </div>
+        </section>
+    </section>
+
+<!-- POSTS LIST -->
+        <section class="section_posts_table">
+            <div class="div_post_table">
+                <table class="posts_table">
+                    <thead>
+                        <tr class="table_titles"> <th> ID <th> Tytuł <th> Opis <th> Author <th> Data utworzenia
+                    <tbody>
+
+                        {% for post in content.posts %}
+                            <tr>
+                                <td>{{post.id}} </td><td><a href="../post/finished/{{post.id}}">{{post.title}}</a></td> <td>{{post.description}}</td> <td>{{post.author.username}}</td> <td>{{post.created}}</td>
+                            </tr>
+                            {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+<!--{% endblock inpage %}-->
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- EXTENDING BASE FILE WITH MENU AND FOOTER -->
+    <!--{% extends "base_page.html" %}-->
+    <!--{% block inpage %}-->
+<!-- CONTENT SECTION -->
+    <section class="section_content">
+<!-- AUTHOR INFORMATION -->
+        <section class="section_information_part">
+            <div class="div_title">
+                <h1>Autor</h1>
+            </div>
+            <div class="div_information_part">
+                <p>Nazwa użytkownika: {{content.author.username}}</p>
+                <p>Data dołączenia: {{content.author.data_joined}}</p>
+                <p>Ostatnie logowanie: {{content.author.last_login}}</p>
+                <p>Posty: {{content.post_count}}</p>
+                <p>Komentarze: {{content.comments_count}}</p>
+            </div>
+        </section>
+<!-- UNFINISHED POSTS LIST -->
+        <form method="post">
+            {% if content.user == content.author and content.unfinished_posts %}
+                <section class="section_unfinished_posts">
+                    <div class="div_post_title">
+                        <h1>Niedokończone posty</h1>
+                    </div>
+                    <div class="div_table">
+                        <table class="content_table_group">
+                            <thead>
+                                <tr class="table_titles">
+                                    <th>Tytuł</th><th>Opis</th><th>Edytuj</th><th>Usuń</th>
+                            <tbody>
+
+                                {% for unfinished_post in content.unfinished_posts %}
+                                    <tr class="table_row">
+                                        <td class="table_cell"><span style="white-space: pre-line">{{unfinished_post.post.title}}</span></td>
+                                        <td class="table_cell"><span style="white-space: pre-line">{{unfinished_post.post.description}}</span></td>
+                                        <td class="table_cell"><a href="../edit_post/unfinished/{{unfinished_post.post.id}}"> Edytuj </a></td>
+                                        <td class="table_cell"><button type="submit" name="delete_unfinished_post_button" value="{{unfinished_post.post.id}}"> Usuń </button></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            {% endif %}
+<!-- FINISHED POSTS LIST -->
+            {% if content.posts %}
+                <section class="section_posts">
+                    <div class="div_post_title">
+                        <h1>Posty</h1>
+                    </div>
+                    <div class="div_table">
+                        <table class="content_table_group">
+                            <thead>
+                                <tr class="table_titles">
+                                    <th>Tytuł</th><th>Opis</th><th>Komentarze</th><th> + </th><th> - </th><th>Edytuj</th><th>Usuń</th>
+                            <tbody>
+                                {% for post in content.posts %}
+                                    <tr class="table_row">
+                                        <td class="table_cell"><span style="white-space: pre-line">{{post.post.title}}</span></td>
+                                        <td class="table_cell"><span style="white-space: pre-line">{{post.post.description}}</span></td>
+                                        <td class="table_cell">{{post.comments_count}}</td>
+                                        <td class="table_cell" style="color: #00FF00;">{{post.likes_plus}}</td>
+                                        <td class="table_cell" style="color: #FF0000;">{{post.likes_minus}}</td>
+
+                                        <td class="table_cell"><a href="../edit_post/finished/{{post.post.id}}"> Edytuj </a></td>
+                                        <td class="table_cell"><button type="submit" name="delete_finished_post_button" value="{{post.post.id}}"> Usuń </button></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            {% endif %}
+        </form>
+    </section>
+<!--{% endblock inpage %}-->
+</body>
+</html>

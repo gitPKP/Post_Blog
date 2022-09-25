@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login/Register</title>
+</head>
+<body>
+<!-- EXTENDING BASE FILE WITH MENU AND FOOTER -->
+    <!--{% extends "base_page.html" %}
+    {% block inpage %}-->
+<!-- CONTENT SECTION -->
+    <section class="section_content">
+        <section class="section_forms">
+<!-- REGISTER NEW USER SECTION -->
+            <section class="section_register_form">
+                <h1 class="title_form">Zarejestruj</h1>
+                <form method="post" name="register_form">
+                    {% csrf_token %}
+                    <h3 class="form_firld_title">Login:</h3>
+                    <input type="text" name="username" value="{{ content.username }}">
+                    <h3 class="form_firld_title">Email:</h3>
+                    <input type="email" name="email" value={{content.email}}>
+                    <h3 class="form_field_title">Hasło:</h3>
+                    <input type="password" name="password"/>
+                    <h3 class="form_field_itle">Potwierdź hasło:</h3>
+                    <input type="password" name="confirm_password"/>
+                    <br>
+                    <button type="submit" name="register_button">Zarejestruj</button>
+                </form>
+            </section>
+<!-- LOGIN SECTION -->
+            <section class="section_login_form">
+                <h1 class="title_form">Zaloguj</h1>
+                <form method="post" name="login_form">
+                    {% csrf_token %}
+                    <h3 class="form_firld_title">Login:</h3>
+                    <input type="text" name="username" value="{{ content.username }}">
+                    <h3 class="form_field_title">Hasło:</h3>
+                    <input type="password" name="password"/>
+                    <br>
+                    <button type="submit" name="login_button">Zaloguj</button>
+                </form>
+            </section>
+        </section>
+<!-- MESSAGES SECTION -->
+        {% if messages %}
+            <section class="section_messages">
+                {% for message in messages %}
+                    <p class="p_message">{{ message }}</p><br>
+                {% endfor %}
+            </section>
+        {% endif %}
+    </section>
+
+    <!--{% endblock inpage %}-->
+</body>
+</html>

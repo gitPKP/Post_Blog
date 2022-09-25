@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<!-- EXTENDING BASE FILE WITH MENU AND FOOTER -->
+    <!--{% extends "base_page.html" %}
+    {% block inpage %}-->
+<!-- CONTENT SECTION -->
+    <section class="section_content">
+<!-- MESSAGES LIST -->
+        <section class="section_messages_list">
+            {% for message in content.messages %}
+<!-- MESSAGES FROM USER -->
+                {% if message.sender == user %}
+                    <div class="div_user_message" style="text-align: left;">
+                        <p>{{message.content}}</p>
+                        <p>{{message.created}}</p>
+                    </div>
+                {% else %}
+<!-- MESSAGES TO USER -->
+                    <div class="div_corespondent_message" style="text-align: right;">
+                        <p>{{message.content}}</p>
+                        <p>{{message.created}}</p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+<!-- SENDING NEW MESSAGE -->
+            <form method="post">
+                {% csrf_token %}
+                <textarea name="message_content"></textarea>
+                <button type="submit" name="send_message_button">WYŚLIJ</button>
+            </form>
+        </section>
+    </section>
+<!--{% endblock inpage %}-->
+</body>
+</html>

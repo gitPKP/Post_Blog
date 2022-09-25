@@ -1,0 +1,3 @@
+post_blog_app/migrations
+post_blog_app/__pycache__
+django_app/__pycache__

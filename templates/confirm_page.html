@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm</title>
+</head>
+<body>
+<!-- EXTENDING BASE FILE WITH MENU AND FOOTER -->
+    <!--{% extends "base_page.html" %}
+    {% block inpage %}-->
+<!-- CONTENT SECTION -->
+    <section class="section_content">
+        <section class="section_confirm">
+            <h1>Na podany, przez Ciebie {{content.login}}, adres e-mail został wysłany kod aktywacyjny. Proszę wprowadź go poniżej:</h1>
+            <form method="post" name=confirm_form">
+                {% csrf_token %}
+                <input type="text" name="code">
+                <button type="submit" name="confirm_button">Potwierdź</button>
+                <button type="submit" name="resend_button">Wyślij kod ponownie</button>
+            </form>
+
+        </section>
+<!-- MESSAGES SECTION -->
+        {% if messages %}
+            <section class="section_messages">
+                {% for message in messages %}
+                    <p class="p_message">{{ message }}</p><br>
+                {% endfor %}
+            </section>
+        {% endif %}
+    </section>
+
+<!--{% endblock inpage %}-->
+
+</body>
+</html>
