@@ -6,8 +6,8 @@
 </head>
 <body>
 <!-- EXTENDING BASE FILE WITH MENU AND FOOTER -->
-    <!--{% extends "base_page.html" %}-->
-    <!--{% block inpage %}-->
+    {% extends "base_page.html" %}
+    {% block inpage %}
 <!-- CONTENT SECTION -->
     <p>{{content}}</p>
     <section class="section_content">
@@ -49,6 +49,6 @@
             </section>
         {% endif %}
     </section>
-<!--{% endblock inpage %}-->
+    {% endblock inpage %}
 </body>
 </html>

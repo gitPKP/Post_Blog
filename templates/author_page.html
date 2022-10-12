@@ -6,8 +6,9 @@
 </head>
 <body>
 <!-- EXTENDING BASE FILE WITH MENU AND FOOTER -->
-    <!--{% extends "base_page.html" %}-->
-    <!--{% block inpage %}-->
+    {% extends "base_page.html" %}
+    {% block inpage %}
+{{content}}
 <!-- CONTENT SECTION -->
     <section class="section_content">
 <!-- AUTHOR INFORMATION -->
@@ -17,14 +18,19 @@
             </div>
             <div class="div_information_part">
                 <p>Nazwa użytkownika: {{content.author.username}}</p>
-                <p>Data dołączenia: {{content.author.data_joined}}</p>
+                <p>Data dołączenia: {{content.author.date_joined}}</p>
                 <p>Ostatnie logowanie: {{content.author.last_login}}</p>
                 <p>Posty: {{content.post_count}}</p>
                 <p>Komentarze: {{content.comments_count}}</p>
+
+                {% if content.author != content.user %}
+                    <a href="../send_message/{{content.author.id}}"> <button> Wyślij wiadomość </button></a>
+                {% endif %}
             </div>
         </section>
 <!-- UNFINISHED POSTS LIST -->
         <form method="post">
+            {% csrf_token %}
             {% if content.user == content.author and content.unfinished_posts %}
                 <section class="section_unfinished_posts">
                     <div class="div_post_title">
@@ -39,16 +45,20 @@
 
                                 {% for unfinished_post in content.unfinished_posts %}
                                     <tr class="table_row">
-                                        <td class="table_cell"><span style="white-space: pre-line">{{unfinished_post.post.title}}</span></td>
-                                        <td class="table_cell"><span style="white-space: pre-line">{{unfinished_post.post.description}}</span></td>
-                                        <td class="table_cell"><a href="../edit_post/unfinished/{{unfinished_post.post.id}}"> Edytuj </a></td>
-                                        <td class="table_cell"><button type="submit" name="delete_unfinished_post_button" value="{{unfinished_post.post.id}}"> Usuń </button></td>
+                                        <td class="table_cell"><span style="white-space: pre-line">{{unfinished_post.title}}</span></td>
+                                        <td class="table_cell"><span style="white-space: pre-line">{{unfinished_post.description}}</span></td>
+                                        <td class="table_cell"><a href="/edit_post/unfinished/{{unfinished_post.id}}"> Edytuj </a></td>
+                                        <td class="table_cell"><button type="submit" name="delete_unfinished_post_button" value="{{unfinished_post.id}}"> Usuń </button></td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
                 </section>
+            {% endif %}
+
+            {% if content.user == content.author %}
+                <a href="/create_post"><button type="button" name="create_post_button">Nowy post</button></a>
             {% endif %}
 <!-- FINISHED POSTS LIST -->
             {% if content.posts %}
@@ -60,18 +70,23 @@
                         <table class="content_table_group">
                             <thead>
                                 <tr class="table_titles">
-                                    <th>Tytuł</th><th>Opis</th><th>Komentarze</th><th> + </th><th> - </th><th>Edytuj</th><th>Usuń</th>
+                                    <th>Tytuł</th><th>Opis</th><th>Komentarze</th><th> + </th><th> - </th>
+                                    {% if content.author == content.user %}
+                                        <th>Edytuj</th><th>Usuń</th>
+                                    {% endif %}
                             <tbody>
                                 {% for post in content.posts %}
                                     <tr class="table_row">
-                                        <td class="table_cell"><span style="white-space: pre-line">{{post.post.title}}</span></td>
+                                        <td class="table_cell"><a href="/post/finished/{{post.post.id}}"><span style="white-space: pre-line">{{post.post.title}} </span></a></td>
                                         <td class="table_cell"><span style="white-space: pre-line">{{post.post.description}}</span></td>
                                         <td class="table_cell">{{post.comments_count}}</td>
                                         <td class="table_cell" style="color: #00FF00;">{{post.likes_plus}}</td>
                                         <td class="table_cell" style="color: #FF0000;">{{post.likes_minus}}</td>
 
-                                        <td class="table_cell"><a href="../edit_post/finished/{{post.post.id}}"> Edytuj </a></td>
-                                        <td class="table_cell"><button type="submit" name="delete_finished_post_button" value="{{post.post.id}}"> Usuń </button></td>
+                                        {% if content.author == content.user %}
+                                            <td class="table_cell"><a href="/edit_post/finished/{{post.post.id}}"> Edytuj </a></td>
+                                            <td class="table_cell"><button type="submit" name="delete_finished_post_button" value="{{post.post.id}}"> Usuń </button></td>
+                                        {% endif %}
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -81,6 +96,6 @@
             {% endif %}
         </form>
     </section>
-<!--{% endblock inpage %}-->
+    {% endblock inpage %}
 </body>
 </html>

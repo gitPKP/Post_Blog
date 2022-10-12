@@ -2,154 +2,77 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>title</title>
-    <style>
-        .variables {
-            color-1: #800080;
-            color-2: #00bfff;
-            color-3: white;
-            }
-        .nav {
-            background-color: color1;
-            width: 100%;
-            height:75px;
-            z-index: 2;
-            }
-
-        .nav-posts {
-            width: 170px;
-            margin: 10px;
-            float: left;
-            overflow: hide;
-            }
-        .posts {
-            font-size: 50px;
-            margin: 0px 0px 0px 10px;
-            padding: 0px;
-            color: #fff
-            }
-        .posts:hover > .posts-list{
-            background-color: red;
-            visibility:visible;
-            }
-
-        .nav-separator {
-            background-color: #00bfff;;
-            height: 55px;
-            width: 5px;
-            margin: 10px;
-            float: left;
-            border-radius: 1px / 1px;
-            }
-
-        .username-field {
-            min-width: 10%;
-            margin: 10px;
-            float: left;
-            background-color: red;
-
-            overflow: hidden;
-            height:55 px;
-            position: relative;
-            z-index: 2;
-            transition-duration: 1s;
-            -webkit-transition-duration:1s;
-            }
-        .username-field:hover {
-            overflow: scroll;
-            height:500px;
-            }
-
-        .nav-log {
-            width: 20%;
-            min-width:250px;
-            margin: 10px;
-            float: right;
-            background-color: #00bfff;
-            border-radius: 12px / 12px;
-            }
-        .login-out {
-            font-size: 30px;
-            margin: 10px;
-            text-align: center;
-
-            }
-
-        .footer{
-            clear: both;
-            background-color: #800080;
-            width: 100%;
-            height:75px;
-            color: #fff
-            }
-
-        .posts-list {
-            visibility: hidden;
-            position: absolute;
-
-            }
-    </style>
+    <title>Title</title>
 </head>
 <body>
-    <section class="nav">
-        <div class="nav-posts">
-            <h3 class="posts">POSTS</h3>
-            <ul class="posts-list">
-                {% for post in content.posts %}
-                <li class="post-in-list">
-                    <p><a href="/post/{{post.id}}"> {{post.title}}</a></p>
-                    <p><a href="/post/{{post.id}}"> {{post.description}}</a></p>
+    <section class="section_nav">
+        <ol>
+            <li class="li_menu"><a href="/posts">Posty</a>
+                {% if content.posts_menu %}
+                    <ul>
+                        {% for post in content.posts_menu %}
+
+                            <li><a href="/post/finished/{{post.id}}">{{post.title}}<br>{{post.created}}</a></li>
+
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li>
+            <li class="li_menu"><a href="/authors">Autorzy</a>
+                {% if user.is_authenticated %}
+                    <ul>
+                        <li><a href="/author/{{user}}">Moje konto</a></li>
+                        <li><a href="/messages">Wiadaomości</a></li>
+                    </ul>
+                {%endif %}
+            </li>
+            <li class="li_title">
+                <a href="/">
+                    <div class="div_title">
+                        <h1 class="h1_title">The Posts Portal</h1>
+                    </div>
+                </a>
+            </li>
+            {% if user.is_authenticated %}
+                <li class="li_menu">{{ content.user.username }}
+                    {% if content.new_messages %}
+                        <span style="color: #FF0000;">{{content.new_messages}}</span>
+                    {% endif %}
+
+                    <ul>
+                        <li><a href="/author/{{user}}">Moje konto</a></li>
+                        <li><a href="/logout">Wyloguj</a></li>
+                    </ul>
                 </li>
-                {% endfor %}
-
-            </ul>
-        </div>
-
-        {% if user.is_authenticated %}
-            <div class="nav-separator">
-            </div>
-            <div class="username-field">
-                <h3 class="username">{{user.username}}</h3>
-            </div>
-
-        <a href="/logout">
-            <div class="nav-log">
-                <h3 class="login-out">Logout</h3>
-            </div>
-        </a>
-        {% else %}
-            <a href="/login">
-            <div class="nav-log">
-                <h3 class="login-out">Register | Log In</h3>
-            </div>
-            </a>
-        {% endif %}
-        <div class="post-list">
-
-            <form method="post" class="user_menu_buttons">
-                {% csrf_token %}
-                <button type="submit" name="create_post_button" value="{{user.username}}">Create post</button>
-                <button type="submit" name="search_post_button" value="{{user.username}}">Search post</button>
-
-            </form>
-
-
-        </div>
+            {% else %}
+                <li class="li_menu">Niezalogowany użytkownik</li>
+                    <ul>
+                        <li><a href="/login">Zaloguj się</a></li>
+                        <li><a href="/login">Zarejestruj się</a></li>
+                    </ul>
+            {% endif %}
+        </ol>
     </section>
 
-    <section>
+    {% if messages %}
+        <section class="section_messages">
+            <div class="div_messages">
+                {% for message in messages %}
+                    <p>{{message}}</p>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+<!-- Content -->
+    <section class="section_content">
         {% block inpage %}
         {% endblock inpage %}
     </section>
 
-
-    <section class="footer" style="float: bottom">
-        <div class="footer-infos">
-            <p>Created by: Radke</p>
-            <p>Email: maybe someday</p>
-        </div>
+<!-- Footer -->
+    <section class="section_footer">
+        <p>Created by: Radke Lab's 2022</p>
     </section>
-
-
 </body>
 </html>

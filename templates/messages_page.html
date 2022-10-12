@@ -6,31 +6,36 @@
 </head>
 <body>
 <!-- EXTENDING BASE FILE WITH MENU AND FOOTER -->
-    <!--{% extends "base_page.html" %}
-    {% block inpage %}-->
+    {% extends "base_page.html" %}
+    {% block inpage %}
 <!-- CONTENT SECTION -->
     <section class="section_content">
         <section class="section_messengers_list">
 <!-- LIST OF USERS WITH MESSAGES -->
+            {{content}}
             {% for person in content.messagers %}
-                {% if person.message_sender == user.id %}
-                    <div class="div_person_filed" style="background-color: #0000FF;">
-                {% else %}
-                    <div class="div_person_filed" style="background-color: #FF0000;">
-                {% endif %}
-
-                    <h4>{{person.author}}</h4>
-                    <p>{{person.content}}</p>
-                    <p>{{person.created}}</p>
-                    {% if person.author == person.message_sender and person.seen == False %}
-                        <p>Not seen</p>
+                <a href="/send_message/{{person.author}}">
+                    {% if person.message_sender.id == user.id %}
+                        <div class="div_person_filed" style="background-color: #0000FF;">
+                    {% else %}
+                        <div class="div_person_filed" style="background-color: #FF0000;">
                     {% endif %}
-                </div>
+
+                        <h4>{{person.author}}</h4>
+                        <p>{{person.content}}</p>
+                        <p>{{person.created}}</p>
+                        {% if person.seen == False %}
+                            <p>Not seen</p>
+                        {% elif person.seen %}
+                            <p>Seen</p>
+                        {% endif %}
+                    </div>
+                </a>
             {% endfor %}
 
         </section>
     </section>
-    <!--{% endblock inpage %}-->
+    {% endblock inpage %}
 
 </body>
 </html>

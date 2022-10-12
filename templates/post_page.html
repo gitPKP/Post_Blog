@@ -6,10 +6,14 @@
 </head>
 <body>
 <!-- EXTENDING BASE FILE WITH MENU AND FOOTER -->
-    <!--{% extends "base_page.html" %}-->
-    <!--{% block inpage %}-->
+    {% extends "base_page.html" %}
+    {% block inpage %}
 <!-- CONTENT SECTION -->
-    <section class="section_content">
+{{content}}
+    <section class="section_content" style='background-image: url("{{content.post.background_image}}");'>
+        <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+        </form>
 <!-- POST TITLE -->
         <section class="section_post_title">
             <div class="div_post_title">
@@ -21,9 +25,9 @@
             {% for paragraph in content.paragraphs %}
                 <div class="div_post_paragraph">
                     {% if paragraph.paragraph_type == 'TXT' %}
-                        <p style="{{paragraph.paragraph_style}}">{{paragraph.paragraph_content}}</p>
+                        <pre style="{{paragraph.paragraph_style_txt}}"><span style="white-space: pre-line">{{paragraph.paragraph_content}}</span></pre>
                     {% elif paragraph.paragraph_type == 'IMG' %}
-                        <img src="{{paragraph.url}}" style="{{paragraph.paragraph_style}}">
+                        <img src="{{paragraph.url}}" style="{{paragraph.paragraph_style_img}}">
                     {% endif %}
                 </div>
             {% endfor %}
@@ -96,7 +100,9 @@
                                     <button type="submit" name="delete_comment_button" value="{{main_comment.comment.id}}">Usuń</button>
                                 {% endif %}
                             {% endif %}
-                            <button type="submit" name="add_comment_button" value="{{main_comment.comment.id}}">Komentuj</button>
+                            {% if not content.to_edit %}
+                                <button type="submit" name="add_comment_button" value="{{main_comment.comment.id}}">Komentuj</button>
+                            {% endif %}
                         </form>
 <!-- EDIT FIELD OF MAIN_COMMENT -->
                         {% if content.to_edit == main_comment.comment.id and not main_comment.comment.content %}
@@ -166,6 +172,6 @@
         </section>
 
     </section>
-<!--{% endblock inpage %}-->
+    {% endblock inpage %}
 </body>
 </html>

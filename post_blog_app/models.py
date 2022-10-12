@@ -31,7 +31,7 @@ class Post(MyModel):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=1000)
-    background_image = models.CharField(max_length=1000, null=True)
+    background_image = models.CharField(max_length=10000, null=True)
     created = models.DateTimeField(default=datetime.now())
     edited = models.DateTimeField(null=True)
 
@@ -40,8 +40,9 @@ class Paragraph(MyModel):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     paragraph_number = models.IntegerField()
     paragraph_type = models.CharField(max_length=20)
-    paragraph_style = models.CharField(max_length=500, null=True)
-    url = models.CharField(max_length=500, null=True)
+    paragraph_style_txt = models.CharField(max_length=500, null=True)
+    paragraph_style_img = models.CharField(max_length=500, null=True)
+    url = models.CharField(max_length=5000, null=True)
     paragraph_content = models.CharField(max_length=2000, null=True)
 
 
@@ -49,6 +50,7 @@ class PostUnfinished(MyModel):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, default='Nowy post')
     description = models.CharField(max_length=1000, default='Opis')
+    background_image = models.CharField(max_length=10000, null=True)
     created = models.DateTimeField(null=True)
 
 
@@ -56,13 +58,15 @@ class ParagraphUnfinished(MyModel):
     post = models.ForeignKey(PostUnfinished, on_delete=models.CASCADE)
     paragraph_number = models.IntegerField()
     paragraph_type = models.CharField(max_length=20)
-    paragraph_style = models.CharField(max_length=500, null=True)
-    url = models.CharField(max_length=500, null=True)
+    paragraph_style_txt = models.CharField(max_length=500, null=True)
+    paragraph_style_img = models.CharField(max_length=500, null=True)
+    url = models.CharField(max_length=5000, null=True)
     paragraph_content = models.CharField(max_length=2000, null=True)
 
     temp_paragraph_type = models.CharField(max_length=20, null=True,)
-    temp_paragraph_style = models.CharField(max_length=500, null=True)
-    temp_url = models.CharField(max_length=500, null=True)
+    temp_paragraph_style_txt = models.CharField(max_length=500, null=True)
+    temp_paragraph_style_img = models.CharField(max_length=500, null=True)
+    temp_url = models.CharField(max_length=5000, null=True)
     temp_paragraph_content = models.CharField(max_length=2000, null=True)
 
 

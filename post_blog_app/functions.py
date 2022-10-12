@@ -40,10 +40,10 @@ def send_mail(email, username, code, url):
     password = 'hhjbzpgkbiqxincf'
     mail_reciver = email
 
+    print(url)
     content = '<h1>Witaj ' + username + '<h1>\n'
     content += '<h3>Twoje konto oczekuje na potwierdzenie rejestracji pod poniższym adresem:</h3>\n'
-####################################################################################################URL DO POPRAWY
-    content += '<a href=127.0.0.1:8000/' + url + '>Potwierdź rejestrację</a>\n'
+    content += '<a href="' + url + '">Potwierdź rejestrację</a>\n'
     content += '<h3>Twój kod potwierdzający ważny przez 15 minut:</h3>\n'
     content += '<h1>' + str(code) + '</h1>\n'
     content += '<h3>Pozdrowienia od ekipy Radke</h3>\n'

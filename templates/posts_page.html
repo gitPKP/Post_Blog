@@ -6,49 +6,72 @@
 </head>
 <body>
 <!-- EXTENDING BASE FILE WITH MENU AND FOOTER -->
-    <!--{% extends "base_page.html" %}-->
-    <!--{% block inpage %}-->
+    {% extends "base_page.html" %}
+    {% block inpage %}
 <!-- CONTENT SECTION -->
-    <p>{{content}}</p>
+
+    <p>{{content.order_by}}</p>
+
     <section class="section_content">
-<!-- FILTERS -->
-        <section class="section_filters">
-            <div class="div_filter_form">
-                <form method="post">
-                    {% csrf_token %}
-                    <input type="text" name="title" placeholder="Tytuł">
-                    <input type="text" name="description" placeholder="Opis">
-                    <input type="text" name="author" placeholder="Autor">
-                    <input type="number" name="id" placeholder="Post id">
+        <form method="post">
+            {% csrf_token %}
+    <!-- FILTERS -->
+            <section class="section_filters">
+                <div class="div_filter_form">
+
+                    <input type="text" name="title" placeholder="Tytuł" value="{{content.filters.title__contains}}">
+                    <input type="text" name="description" placeholder="Opis" value="{{content.filters.description__contains}}">
+                    <input type="text" name="author" placeholder="Autor" value="{{content.filters.author__in}}">
+                    <input type="number" name="id" placeholder="Post id" value="{{content.filters.id}}">
                     <p>Od: </p>
-                    <input type="date" name="created_after" placeholder="Data utworzenia od">
+                    <input type="date" name="created_after" placeholder="Data utworzenia od" value="{{content.filters.created__gt}}">
                     <p>Do: </p>
-                    <input type="date" name="created_before" placeholder="Data utworzenia do">
+                    <input type="date" name="created_before" placeholder="Data utworzenia do" value="{{content.filters.created__lt}}">
 
                     <button type="submit" name="filter_button">FILTRUJ</button>
-                </form>
-            </div>
-        </section>
-    </section>
+                </div>
+            </section>
 
-<!-- POSTS LIST -->
-        <section class="section_posts_table">
-            <div class="div_post_table">
-                <table class="posts_table">
-                    <thead>
-                        <tr class="table_titles"> <th> ID <th> Tytuł <th> Opis <th> Author <th> Data utworzenia
-                    <tbody>
-
-                        {% for post in content.posts %}
-                            <tr>
-                                <td>{{post.id}} </td><td><a href="../post/finished/{{post.id}}">{{post.title}}</a></td> <td>{{post.description}}</td> <td>{{post.author.username}}</td> <td>{{post.created}}</td>
+    <!-- POSTS LIST -->
+            <section class="section_posts_table">
+                <div class="div_post_table">
+                    <table class="posts_table">
+                        <thead>
+                            <tr class="table_titles"> <th> ID <th> Tytuł <th> Opis <th> Author <th> Likes <th> Komentarze <th> Data utworzenia
+                        <tbody>
+                            <tr class="table_order_buttons">
+                                {% for column_name in content.column_names %}
+                                    {% if column_name in content.order_by %}
+                                        {% if content.order_by.0 == '-' %}
+                                            <td>
+                                                <button type="submit" name="order_by" value="{{column_name}}" style="background-color: #777700;">DESC</button>
+                                            </td>
+                                        {% else %}
+                                            <td>
+                                                <button type="submit" name="order_by" value="-{{column_name}}" style="background-color: #00FF00;">ASC</button>
+                                            </td>
+                                        {% endif %}
+                                    {% else %}
+                                        <td>
+                                            <button type="submit" name="order_by" value="{{column_name}}">ASC</button>
+                                        </td>
+                                    {% endif %}
+                                {% endfor %}
                             </tr>
-                            {% endfor %}
-                    </tbody>
-                </table>
-            </div>
 
-        </section>
-<!--{% endblock inpage %}-->
+
+                            {% for post in content.posts %}
+                                <tr>
+                                    <td>{{post.post_model.id}} </td><td><a href="../post/finished/{{post.id}}">{{post.post_model.title}}</a></td> <td>{{post.post_model.description}}</td> <td>{{post.post_model.author.username}}</td> <td>{{post.likes}}</td> <td>{{post.comments}}</td> <td>{{post.post_model.created}}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+        </form>
+    </section>
+    {% endblock inpage %}
 </body>
 </html>

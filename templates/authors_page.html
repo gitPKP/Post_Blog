@@ -6,8 +6,8 @@
 </head>
 <body>
 <!-- EXTENDING BASE FILE WITH MENU AND FOOTER -->
-    <!--{% extends "base_page.html" %}-->
-    <!--{% block inpage %}-->
+    {% extends "base_page.html" %}
+    {% block inpage %}
 <!-- CONTENT SECTION -->
     <section class="section_content">
         <section class="section_search_author">
@@ -18,6 +18,9 @@
                 {% csrf_token %}
                 <input id="author_name" type="text" onchange="updatevariable(this.value)">
                 <a href="author/" onclick="location.href=this.href+value;return false;"><button>Przejdź do autora</button></a>
+                <br>
+                <input name="search_author" type="text">
+                <button type="submit" name="search_author_button">Szukaj autora</button>
             </form>
         </section>
 
@@ -57,7 +60,7 @@
 
 
     </section>
-<!--{% endblock inpage %}-->
+{% endblock inpage %}
 
 
 
