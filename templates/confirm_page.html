@@ -3,33 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <title>Confirm</title>
+    <style>
+.section_content_inside {
+    padding: 30px;
+}
+.section_content_inside h1 {
+    text-align: center;
+
+    font-size: 40px;
+}
+form {
+    text-align: center;
+}
+input {
+    text-align: center;
+
+    margin: 10px 0;
+    font-size: 60px;
+}
+button {
+    width: 20%;
+    height: 40px;
+    margin: 20px 30px;
+}
+
+    </style>
 </head>
 <body>
 <!-- EXTENDING BASE FILE WITH MENU AND FOOTER -->
     {% extends "base_page.html" %}
     {% block inpage %}
 <!-- CONTENT SECTION -->
-    <section class="section_content">
+    <section class="section_content_inside">
         <section class="section_confirm">
-            <h1>Na podany, przez Ciebie {{content.login}}, adres e-mail został wysłany kod aktywacyjny. Proszę wprowadź go poniżej:</h1>
+            <h1>Na podany, przez Ciebie {{content.login}}, adres e-mail został wysłany kod aktywacyjny.</h1>
+            <h1>Proszę wprowadź go poniżej:</h1>
             <form method="post" name=confirm_form">
                 {% csrf_token %}
-                <input type="text" name="code">
+                <input type="text" name="code" maxlength="4" size="1">
+                <br>
                 <button type="submit" name="confirm_button">Potwierdź</button>
                 <button type="submit" name="resend_button">Wyślij kod ponownie</button>
             </form>
-
         </section>
 <!-- MESSAGES SECTION -->
         {% if messages %}
             <section class="section_messages">
                 {% for message in messages %}
-                    <p class="p_message">{{ message }}</p><br>
+                    <p class="p_message">{{ message }}</p>
+                    {% if not forloop.last %}
+                        <br>
+                    {% endif %}
                 {% endfor %}
             </section>
         {% endif %}
     </section>
-
     {% endblock inpage %}
 
 </body>

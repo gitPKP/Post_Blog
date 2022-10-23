@@ -3,42 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <title>Login/Register</title>
+    <style>
+.section_forms {
+    height: 304px;
+    padding-top: 16px;
+    margin-bottom: 16px;
+}
+
+.section_register_form {
+    display: block;
+    float: left;
+    text-align: right;
+
+    width: 50%;
+    height: 100%;
+    padding-right: 5%;
+
+    border-style: solid;
+    border-width: 0 5px 0 0;
+    border-color: var(--color_second);
+    box-sizing: border-box;
+}
+.register_form {
+    float: right;
+    text-align: left;
+
+    width: 50%;
+}
+
+.section_login_form {
+    display: block;
+    float: right;
+    text-align: left;
+
+    width: 50%;
+    height: 100%;
+    padding-left: 5%;
+
+    border-style: solid;
+    border-width: 0 0 0 5px;
+    border-color: var(--color_second);
+    box-sizing: border-box;
+}
+
+.login_form {
+    float: left;
+    text-align: left;
+
+    width: 50%;
+}
+
+.title_form {
+    font-size: 30px;
+    line-height: 1.8em;
+}
+form > h3 {
+    font-size: 18px;
+    line-height: 1.5em;
+}
+form > input {
+    width: 100%;
+}
+form > button {
+    width: 120px;
+    height: 40px;
+    margin-left: calc(50% - 60px);
+    margin-top: 10px;
+}
+    </style>
+
 </head>
 <body>
 <!-- EXTENDING BASE FILE WITH MENU AND FOOTER -->
     {% extends "base_page.html" %}
     {% block inpage %}
 <!-- CONTENT SECTION -->
-    <section class="section_content">
+    <section class="section_content_inside">
         <section class="section_forms">
 <!-- REGISTER NEW USER SECTION -->
             <section class="section_register_form">
                 <h1 class="title_form">Zarejestruj</h1>
-                <form method="post" name="register_form">
+                <form method="post" name="register_form" class="register_form">
                     {% csrf_token %}
-                    <h3 class="form_firld_title">Login:</h3>
-                    <input type="text" name="username" value="{{ content.username }}">
-                    <h3 class="form_firld_title">Email:</h3>
-                    <input type="email" name="email" value={{content.email}}>
+                    <h3 class="form_field_title">Login:</h3>
+                    <input type="text" name="username" value="{{ content.username }}" required>
+                    <h3 class="form_field_title">Email:</h3>
+                    <input type="email" name="email" value="{{content.email}}" required>
                     <h3 class="form_field_title">Hasło:</h3>
-                    <input type="password" name="password"/>
+                    <input type="password" name="password" required>
                     <h3 class="form_field_itle">Potwierdź hasło:</h3>
-                    <input type="password" name="confirm_password"/>
+                    <input type="password" name="confirm_password" required>
                     <br>
-                    <button type="submit" name="register_button">Zarejestruj</button>
+                    <button type="submit" name="register_button">ZAREJESTRUJ</button>
                 </form>
             </section>
 <!-- LOGIN SECTION -->
             <section class="section_login_form">
                 <h1 class="title_form">Zaloguj</h1>
-                <form method="post" name="login_form">
+                <form method="post" name="login_form" class="login_form">
                     {% csrf_token %}
-                    <h3 class="form_firld_title">Login:</h3>
-                    <input type="text" name="username" value="{{ content.username }}">
+                    <h3 class="form_field_title">Login:</h3>
+                    <input type="text" name="username" value="{{ content.username }}" required>
                     <h3 class="form_field_title">Hasło:</h3>
-                    <input type="password" name="password"/>
+                    <input type="password" name="password" required>
                     <br>
-                    <button type="submit" name="login_button">Zaloguj</button>
+                    <button type="submit" name="login_button">ZALOGUJ</button>
                 </form>
             </section>
         </section>
@@ -46,12 +115,14 @@
         {% if messages %}
             <section class="section_messages">
                 {% for message in messages %}
-                    <p class="p_message">{{ message }}</p><br>
+                    <p class="p_message">{{ message }}</p>
+                    {% if not forloop.last %}
+                        <br>
+                    {% endif %}
                 {% endfor %}
             </section>
         {% endif %}
     </section>
-
     {% endblock inpage %}
 </body>
 </html>

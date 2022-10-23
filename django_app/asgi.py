@@ -12,8 +12,8 @@ import os
 from django.core.asgi import get_asgi_application
 
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 app = FastAPI()
-
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_app.settings')
 

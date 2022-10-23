@@ -27,6 +27,8 @@ urlpatterns = [
     path('api/user_to_confirm_update', api.user_to_confirm_update, name='user_to_confirm_update'),
 
     path('test', views.test, name='test'),
+    path('menu', views.menu, name='menu'),
+
     path('', views.start, name='start'),
     path('login', views.login, name='login'),
     path('confirm/<str:login>', views.confirm, name='confirm'),

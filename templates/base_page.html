@@ -3,28 +3,362 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+* {
+  margin: 0px 0px;
+  padding: 0px 0px;
+}
+html {
+    --color_first: #FDD700; /* menu nav, footer */
+    --color_second: #FF0000; /* borders , hoover */
+    --color_third: #fcb103; /* background */
+    --color_fourth: #FF00FF; /* form border */
+    --color_5: #FFFFFF; /* form border */
+}
+
+body {
+    width:100%;
+    height:100%;
+
+    background-color: var(--color_third) !important;
+}
+
+/* menu */
+/* pasek menu */
+.section_nav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+
+    width: 100%;
+    height:72px;
+
+    background-color: var(--color_first);
+}
+
+ol {
+    list-style-type:none;
+
+    padding:0;
+    margin:0;
+    width:100%;
+    height:60px;
+
+    font-size:20px;
+    line-height: 60px;
+    text-align:center;
+}
+
+ol a {
+    display: block;
+    text-decoration: none;
+
+    padding: 0 px;
+
+    color: #000;
+}
+
+ol > li {
+    float:left;
+    width:20%;
+    height: 72px;
+
+    background-color: var(--color_first);
+
+    border-style: solid;
+    border-width: 6px 3px;
+    border-color: var(--color_second);
+    box-sizing: border-box;
+}
+
+
+    /* bold and change color of username on hover */
+ol > .li_menu:hover {
+    font-weight: bold;
+    color: var(--color_second);
+
+    border-style: solid;
+    border-width: 5px;
+    border-color: var(--color_second);
+    box-sizing: border-box;
+}
+
+    /* bold and change color of posts and authors on hover */
+ol > .li_menu:hover > a {
+    font-weight: bold;
+    color: var(--color_second);
+}
+
+    /* remove bottom border under posts */
+ol > #li_menu_post:hover {
+    border-width: 5px 5px 0px 5px;
+}
+
+    /* fixing border in menu without undermenu */
+ol > #li_menu_authors:hover {
+    border-width: 6px 3px;
+}
+
+    /* site title */
+.li_title {
+    padding-top: 10px;
+    width: 40%;
+    height: 72px;
+
+    line-height:1em;
+}
+.div_title {
+    padding: 0px;
+    margin: 0px;
+    height: 60px;
+
+    line-height:1em;
+}
+
+
+/* podmenu */
+ol > li > ul {
+    list-style-type:none;
+    display:none;
+
+    padding:0;
+    margin:0;
+    margin-top: 7px;
+    margin-left: -6px; /* margin bcs of borders in higher level*/
+    width: 400%;
+}
+
+    /* szerokość pozycji na liście 50% - zostawiam miejsce na opis */
+ol > li > ul > li {
+    position: relative;
+    width: 50%;
+
+    background-color: var(--color_first);
+
+    border-style: solid;
+    border-width: 0px 6px 0px 6px;
+    border-color: var(--color_second);
+    box-sizing: border-box;
+}
+
+ol > li > ul > li > a {
+    margin-right:-1px;
+}
+
+    /* szerokość listy menu user 25% a nie 50% jak w post */
+ol > li > .ul_menu_user > li {
+    width: calc(25% + 12px);
+}
+
+    /* last position on list have bottom border */
+ol > li > ul > li:last-child {
+    border-style: solid;
+    border-width: 0px 6px 6px 6px;
+    border-color: var(--color_second);
+    box-sizing: border-box;
+}
+
+    /* post title and create data*/
+.li_menu_post_title{
+    line-height:2em;
+    font-size: 18px;
+}
+.li_menu_post_created{
+    line-height:2em;
+    font-size: 14px;
+}
+
+ol > li:hover > ul {
+  display: block;
+}
+
+ol > li > ul > li > a:hover {
+  color: #FF0000;
+  font-weight: bold;
+
+
+  border-style: solid;
+  border-width: 6px 0px;
+  border-color: var(--color_second);
+  box-sizing: border-box;
+}
+
+    /* ostatnia pozycja na liście - najazd dodaje tylko górną krawędź bo dolna już jest */
+ol > li > ul> li:last-child > a:hover {
+    border-width: 6px 0px 0px 0px;
+}
+
+
+
+/* add scroll to post_list */
+#li_menu_post > ul {
+    overflow-y: scroll;
+    max-height: calc(100vh - 72px);
+}
+
+/* hide scrollbar */
+#li_menu_post > ul::-webkit-scrollbar {
+    display: none;
+}
+#li_menu_post > ul {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* pod-podmenu - descriptions */
+#ol_menu > li:first-child > ul > li > ol {
+    display: none;
+    overflow-y: scroll;
+
+    position: absolute;
+    left: 100%;
+    top: 0;
+    z-index: 200;
+    width: 100%;
+    max-height: 300px;
+    height: auto;
+    margin-left: 1px;
+
+    border: solid;
+    border-width: 6px;
+    border-color: var(--color_second);
+    box-sizing: border-box;
+}
+
+#ol_menu > li:first-child > ul > li > ol > li {
+    height: auto;
+    width: 100%;
+
+    background-color: #CCC;
+
+    border-width: 0px;
+}
+
+.p_post_description {
+    white-space: pre-line;
+
+    margin: 4px;
+
+    line-height: 1.1em;
+    font-size: 14px;
+    font-weight: normal;
+    color: #000;
+}
+
+/* hide scrollbar */
+#ol_menu > li:first-child > ul > li > ol::-webkit-scrollbar {
+    display: none;
+}
+#ol_menu > li:first-child > ul > li > ol {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+#ol_menu > li > ul > li:hover > ol {
+    display: block;
+}
+
+#ol_menu > li:first-child > ul > li:has(ol > li:hover) > a {
+    color: #FF0000;
+    font-weight: bold;
+
+    border-style: solid;
+    border-width: 6px 0px;
+    border-color: var(--color_second);
+    box-sizing: border-box;
+}
+
+
+
+/* content */
+.section_content {
+    margin: 72px 0px 0px 0px;
+    padding-top: 0px;
+    min-height: calc(100vh - 102px);
+    background-color: var(--color_third);
+}
+
+/* buttons */
+button {
+    background-color: var(--color_first);
+}
+
+button:hover {
+    font-weight: bold;
+
+    color: var(--color_second);
+
+    border-color: var(--color_second);
+}
+
+/* Message field */
+.section_messages {
+    text-align: center;
+
+    max - width: calc(100% - 30px);
+    width: 80%;
+    margin: auto;
+    padding: 10px;
+
+    background-color: var(--color_first);
+
+    border-style: solid;
+    border-width: 3px;
+    border-color: var(--color_second);
+}
+.section_messages > p {
+    font-size: 18px;
+    line-height: 2em;
+
+    color: var(--color_second);
+}
+
+/* footer */
+.section_footer {
+    height: 30px;
+    width: 100%;
+
+    background-color: var(--color_first);
+    border: solid;
+    border-width: 6px 0px 0px 0px;
+    border-color: var(--color_second);
+    box-sizing: border-box;
+}
+
+.section_footer > p {
+    float:right;
+    margin-right: 5px;
+}
+
+    </style>
+
+
+
+
+
 </head>
 <body>
+<!-- MAIN MENU -->
     <section class="section_nav">
-        <ol>
-            <li class="li_menu"><a href="/posts">Posty</a>
+        <ol id="ol_menu">
+            <li class="li_menu" id="li_menu_post"><a href="/posts">Posty</a>
                 {% if content.posts_menu %}
                     <ul>
                         {% for post in content.posts_menu %}
-
-                            <li><a href="/post/finished/{{post.id}}">{{post.title}}<br>{{post.created}}</a></li>
-
+                            <li><a href="/post/finished/{{post.id}}">
+                                    <p class="li_menu_post_title">{{post.title}}</p>
+                                    <p class="li_menu_post_created">{{post.created}}</p>
+                                </a>
+                                <ol>
+                                    <li><p class="p_post_description">{{post.description}}</p></li>
+                                </ol>
+                            </li>
                         {% endfor %}
                     </ul>
                 {% endif %}
             </li>
-            <li class="li_menu"><a href="/authors">Autorzy</a>
-                {% if user.is_authenticated %}
-                    <ul>
-                        <li><a href="/author/{{user}}">Moje konto</a></li>
-                        <li><a href="/messages">Wiadaomości</a></li>
-                    </ul>
-                {%endif %}
+            <li class="li_menu" id="li_menu_authors"><a href="/authors">Autorzy</a>
             </li>
             <li class="li_title">
                 <a href="/">
@@ -34,43 +368,39 @@
                 </a>
             </li>
             {% if user.is_authenticated %}
-                <li class="li_menu">{{ content.user.username }}
-                    {% if content.new_messages %}
-                        <span style="color: #FF0000;">{{content.new_messages}}</span>
-                    {% endif %}
+                {% if content.new_messages %}
+                    <li class="li_menu" style="background-color: #0000FF;">{{ content.user.username }}
+                {% else %}
+                    <li class="li_menu">{{ content.user.username }}
+                {% endif %}
 
-                    <ul>
-                        <li><a href="/author/{{user}}">Moje konto</a></li>
-                        <li><a href="/logout">Wyloguj</a></li>
-                    </ul>
-                </li>
+                        <ul class="ul_menu_user">
+                            <li><a href="/author/{{user}}">Moje konto</a></li>
+                            <li><a href="/messages">Wiadaomości
+                                {% if content.new_messages %}
+                                    <span style="color: #FF0000;">{{content.new_messages}}</span>
+                                {% endif %}
+                            </a></li>
+                            <li><a href="/logout">Wyloguj</a></li>
+                        </ul>
+                    </li>
             {% else %}
-                <li class="li_menu">Niezalogowany użytkownik</li>
-                    <ul>
-                        <li><a href="/login">Zaloguj się</a></li>
-                        <li><a href="/login">Zarejestruj się</a></li>
-                    </ul>
+                    <li class="li_menu"><p style="white-space: nowrap;overflow: clip;">Niezalogowany użytkownik</p>
+                        <ul class="ul_menu_user">
+                            <li><a href="/login">Zaloguj się</a></li>
+                            <li><a href="/login">Zarejestruj się</a></li>
+                        </ul>
+                    </li>
             {% endif %}
         </ol>
     </section>
 
-    {% if messages %}
-        <section class="section_messages">
-            <div class="div_messages">
-                {% for message in messages %}
-                    <p>{{message}}</p>
-                {% endfor %}
-            </div>
-        </section>
-    {% endif %}
-
-<!-- Content -->
+<!-- CONTENT SECTION-->
     <section class="section_content">
         {% block inpage %}
         {% endblock inpage %}
     </section>
-
-<!-- Footer -->
+<!-- FOOTER SECTION -->
     <section class="section_footer">
         <p>Created by: Radke Lab's 2022</p>
     </section>

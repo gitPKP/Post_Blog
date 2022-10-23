@@ -13,9 +13,8 @@ from pytz import timezone
 
 from .models import *
 from .functions import gain_quote, send_mail, create_content, get_comments
-
-# SZYFROWNIE PODWOJNE HASEŁ BO W UTC WIDAĆ HASŁA
-
+# SZYFROWNIE PODWOJNE HASEŁ BO W UTC WIDAĆ HASŁAv
+print('2x1ww3zwxwcwqxzcwwccvaaxwcwcxzxxvzxcwwbz')
 # Create your views here.
 @csrf_exempt
 def test(request):
@@ -60,6 +59,30 @@ def test(request):
 #    return JsonResponse({"messages": "Base page"}, safe=False)
 
 
+@csrf_exempt
+def menu(request):
+    user = auth.get_user(request)
+    posts_menu = Post.objects.order_by('-created').all()
+
+    if user.username:
+        new_messages = len(Messages.objects.filter(reciver=user, seen=False))
+    else:
+        new_messages = False
+
+    last_3 = posts_menu[:3]
+    quote = gain_quote()
+    best_3_likes = Likes.objects.filter(value='+1').values('post').annotate(plus_likes=Count('post')).order_by(
+        '-plus_likes').all()[:3]
+    best_3 = []
+    for post in best_3_likes:
+        best_3.append({'post': Post.objects.filter(id=post['post']).first(), 'plus_likes': post['plus_likes']})
+
+    content = {'user': user, 'posts_menu': posts_menu, 'new_messages': new_messages, 'last_3': last_3, 'best_3': best_3,
+               'quote': quote}
+    print(content['posts_menu'][0].created)
+    return render(request, 'base_page.html', {'content': content})
+
+
 def login(request):
     posts_menu = Post.objects.order_by('-created').all()
     # Button service
@@ -76,7 +99,7 @@ def login(request):
                 return redirect('/')
             else:
                 messages.info(request, 'Błędne dane logowania.')
-                return render(request, 'login_page.html')
+                return render(request, 'login_page.html', {'content': {'posts_menu': posts_menu}})
 
         elif 'register_button' in request.POST.keys():
             username = request.POST['username']
@@ -631,10 +654,12 @@ def post(request, post_type, post_id):
                     else:
                         comment_likes_minus = 0
 
-                    if CommentsLikes.objects.filter(comment=main_comment, author=user).exists():
-                        comment_my_like = CommentsLikes.objects.filter(comment=main_comment, author=user).first().value
-                    else:
-                        comment_my_like = 0
+                    comment_my_like = 0
+                    print(user.username)
+                    if user.username:
+                        if CommentsLikes.objects.filter(comment=main_comment, author=user).exists():
+                            comment_my_like = CommentsLikes.objects.filter(comment=main_comment,
+                                                                           author=user).first().value
 
                     comments_to_comment = []
                     if Comments.objects.filter(post=post, comment=main_comment).exists():
@@ -651,11 +676,11 @@ def post(request, post_type, post_id):
                             else:
                                 comment_to_comment_likes_minus = 0
 
-                            if CommentsLikes.objects.filter(comment=comment_to_comment, author=user).exists():
-                                comment_to_comment_my_like = CommentsLikes.objects.filter(comment=comment_to_comment,
-                                                                                          author=user).first().value
-                            else:
-                                comment_to_comment_my_like = 0
+                            comment_to_comment_my_like = 0
+                            if user.username:
+                                if CommentsLikes.objects.filter(comment=comment_to_comment, author=user).exists():
+                                    comment_to_comment_my_like = CommentsLikes.objects.filter(comment=comment_to_comment,
+                                                                                              author=user).first().value
 
                             comments_to_comment.append({'comment_to_comment': comment_to_comment,
                                                         'comment_to_comment_likes_plus': comment_to_comment_likes_plus,

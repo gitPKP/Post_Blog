@@ -2,28 +2,149 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Main</title>
+    <style>
+._3_posts_section {
+    display: block;
+
+    max-height: 300px;
+    width: 100%;
+    padding: 10px 0;
+}
+h2 {
+    text-align: center;
+
+    padding: 5px 0;
+    font-size: 30px;
+}
+
+.div_1_of_3 {
+    display: block;
+    float: left;
+
+    max-height: 280px;
+    width: 28%;
+    margin-left: 4%;
+    padding: 3px;
+
+    background-color: var(--color_first);
+
+    border-style: solid;
+    border-width: 3px;
+    border-color: var(--color_second);
+    box-sizing: border-box;
+}
+.div_1_of_3:hover {
+    border-width: 5px;
+    background-color: var(--color_fourth);
+}
+
+.div_1_of_3 > h4 {
+    text-align: center;
+    white-space: nowrap;
+    overflow: scroll;
+
+    width: 100%;
+    padding: 0 0;
+
+    font-size: 18px;
+
+    border-style: solid;
+    border-width: 0 0 1px 0;
+    border-color: var(--color_second);
+    box-sizing: border-box;
+}
+
+/* hide scrollbar */
+.div_1_of_3 > h4::-webkit-scrollbar {
+    display: none;
+}
+.div_1_of_3 > h4 {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+._1_of_3_created {
+    float: right;
+    white-space: nowrap;
+    overflow: clip;
+
+    max-width: 65%;
+}
+._1_of_3_likes {
+    float: left;
+    white-space: nowrap;
+    overflow: clip;
+
+    max-width: 35%;
+}
+._1_of_3_description_scroll_div {
+    clear: both;
+    overflow-y: scroll;
+
+    width: 100%;
+    max-height: 228px;
+    padding-top: 3px;
+}
+/* hide scrollbar */
+._1_of_3_description_scroll_div::-webkit-scrollbar {
+    display: none;
+}
+._1_of_3_description_scroll_div {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.quote_section {
+    width: 100%;
+    margin: 7px 0;
+    padding: 5px;
+
+    border-style: solid;
+    border-width: 5px 0;
+    border-color: var(--color_second);
+    box-sizing: border-box;
+}
+.quote_text {
+    text-indent: 20px;
+}
+.quote_author {
+    float:left;
+}
+.quote_url {
+    float:right;
+}
+
+
+.div_clear {
+    clear: both;
+}
+    </style>
+
 </head>
 <body>
 <!-- EXTENDING BASE FILE WITH MENU AND FOOTER -->
     {% extends "base_page.html" %}
     {% block inpage %}
 <!-- CONTENT SECTION -->
-    <p>{{content}}</p>
-    <section class="section_content">
+    <section class="section_content_inside">
 <!-- LAST 3 POSTS SECTION -->
         {% if content.last_3 %}
-            <section class="3_posts_section">
+            <section class="_3_posts_section">
+                <h2 class="title_div_1_of_3">Ostatnie posty</h2>
                 {% for post in content.last_3 %}
-                    <div class="div_1_of_3">
-                        <h4 class="1_of_3_title">{{post.title}}</h4>
-                        <p class="1_of_3_description">{{post.description}}</p>
-                        <p class="1_of_3_created">{{post.created}}</p>
+                    <div class="div_1_of_3" onclick="window.location='/post/finished/{{post.id}}';">
+                        <h4 class="_1_of_3_title">{{post.title}}</h4>
+                        <p class="_1_of_3_created">{{post.created}}</p>
+                        <div class="_1_of_3_description_scroll_div">
+                            <p class="_1_of_3_description">{{post.description}}</p>
+                        </div>
                     </div>
                 {% endfor %}
             </section>
         {% endif %}
 <!-- QUOTE SECTION -->
+        <div class="div_clear"></div>
         {% if content.quote %}
             <section class="quote_section">
                 <div class="div_quote">
@@ -31,22 +152,27 @@
                     <h4 class="quote_author">{{content.quote.author}}</h4>
 
                     <p class="quote_url">Powered by: <a href="{{content.quote.url}}">Lubimyczytac.pl</a></p>
+                    <div class="div_clear"></div>
                 </div>
             </section>
         {% endif %}
 
 <!-- BEST 3 POSTS SECTION -->
         {% if content.best_3 %}
-            <section class="3_posts_section">
+            <section class="_3_posts_section">
+                <h2 class="title_div_1_of_3">Najlepsze posty</h2>
                 {% for post in content.best_3 %}
-                    <div class="div_1_of_3">
+                    <div class="div_1_of_3" onclick="window.location='/post/finished/{{post.post.id}}';">
                         <h4 class="1_of_3_title">{{post.post.title}}</h4>
-                        <p class="1_of_3_description">{{post.post.description}}</p>
-                        <p class="1_of_3_created">{{post.post.created}}</p>
-                        <p class="1_of_3_likes">Likes: {{post.plus_likes}}</p>
+                        <p class="_1_of_3_created">{{post.post.created}}</p>
+                        <p class="_1_of_3_likes">Likes: {{post.plus_likes}}</p>
+                        <div class="_1_of_3_description_scroll_div">
+                            <p class="_1_of_3_description">{{post.post.description}}</p>
+                        </div>
                     </div>
                 {% endfor %}
             </section>
+            <div class="div_clear" style="height:3px;"></div>
         {% endif %}
     </section>
     {% endblock inpage %}
