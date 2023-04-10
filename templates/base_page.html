@@ -23,6 +23,11 @@ body {
     background-color: var(--color_third) !important;
 }
 
+a {
+    text-decoration: none;
+    color: #000000;
+}
+
 /* menu */
 /* pasek menu */
 .section_nav {
@@ -281,6 +286,7 @@ ol > li > ul> li:last-child > a:hover {
 
 /* buttons */
 button {
+    padding: 2px;
     background-color: var(--color_first);
 }
 
@@ -331,6 +337,49 @@ button:hover {
     margin-right: 5px;
 }
 
+
+
+
+/* table */
+.div_post_table {
+    width: 100%;
+}
+table {
+    max-width: 100%;
+
+    border-spacing: 1px;
+
+    text-align: left;
+    display: inline-block;
+}
+.content_table_title {
+    text-align: center;
+}
+.table_order_buttons {
+    text-align: center;
+}
+
+td, th {
+    padding: 3px;
+
+    background-color: var(--color_first);    /* #FF00FF; */
+
+    border: 1px solid black;
+    box-sizing: border-box;
+}
+
+.content_table_row:hover > td, .content_table_row:hover > th {
+    background-color: #000000;
+    color: var(--color_first);
+}
+
+tr:hover  a{
+    color: #0000FF;
+}
+tr:hover td {
+    background-color: #000000;
+    color: var(--color_first);
+}
     </style>
 
 

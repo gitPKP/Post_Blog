@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+.section_content_inside {
+    padding: 10px;
+}
+    </style>
 </head>
 <body>
 <!-- EXTENDING BASE FILE WITH MENU AND FOOTER -->
     {% extends "base_page.html" %}
     {% block inpage %}
 <!-- CONTENT SECTION -->
-    <section class="section_content">
+    <section class="section_content_inside">
         <section class="section_search_author">
             <div class="div_post_title">
                 <h1>Wyszukaj Autora</h1>
@@ -23,7 +28,17 @@
                 <button type="submit" name="search_author_button">Szukaj autora</button>
             </form>
         </section>
-
+<!-- MESSAGES SECTION -->
+        {% if messages %}
+            <section class="section_messages">
+                {% for message in messages %}
+                    <p class="p_message">{{ message }}</p>
+                    {% if not forloop.last %}
+                        <br>
+                    {% endif %}
+                {% endfor %}
+            </section>
+        {% endif %}
 <!-- TABLE OF AUTHORS -->
         {% if content.users %}
             <section class="section_authors_list">

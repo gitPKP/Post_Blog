@@ -3,38 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
+    <style>
+.section_content_inside_messages {
+    height: 100%;
+    width: 100%;
+}
+.section_content_inside_messages > h3 {
+    overflow: clip;
+    height: 50px;
+}
+.section_messages_list {
+    position: relative;
+    overflow-y: scroll;
+
+    height: calc(100% - 100px);
+    padding: 5px;
+}
+/* hide scrollbar */
+.section_messages_list::-webkit-scrollbar {
+    display: none;
+}
+.section_messages_list {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.div_user_message {
+    float: left;
+    text-align: left;
+
+    max-width: 75%;
+    margin-bottom: 5px;
+    padding: 3px;
+
+    border-radius: 5px;
+    background: var(--color_first);
+}
+.div_corespondent_message {
+    float: right;
+    text-align: right;
+
+    max-width: 75%;
+    margin-bottom: 5px;
+    padding: 3px;
+
+    border-radius: 5px;
+    background: var(--color_first);
+}
+.section_messages_list > div:hover {
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--color_second);
+    box-sizing: content-box;
+}
+.p_message_created {
+    padding-top: 3px;
+
+    font-size: 10px;
+    color: #AAAAAA;
+}
+
+
+.section_content_inside_messages > form {
+    width: 100%;
+    height: 40px;
+
+    border-style: solid;
+    border-width: 2px 0 0 0;
+    border-color: var(--color_second);
+    box-sizing: border-box;
+}
+
+button {
+    float: right;
+    height: 35px;
+    width: 60px;
+    margin: 2.5px 2.5px 0 0;
+}
+textarea {
+    float: left;
+
+    height: 35px;
+    width: calc(100% - 67.5px);
+    margin: 2.5px 0 0 2.5px;
+}
+
+/* hide scrollbar */
+textarea::-webkit-scrollbar {
+    display: none;
+}
+textarea {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+    </style>
+
 </head>
 <body>
 <!-- EXTENDING BASE FILE WITH MENU AND FOOTER -->
-    {% extends "base_page.html" %}
-    {% block inpage %}
+    {% extends "messages_page.html" %}
+    {% block inpage_messages %}
 <!-- CONTENT SECTION -->
-    <section class="section_content">
+    <section class="section_content_inside_messages">
+        <h3>{{content.author}}</h3>
 <!-- MESSAGES LIST -->
         <section class="section_messages_list">
+
             {% for message in content.messages %}
 <!-- MESSAGES FROM USER -->
                 {% if message.sender == user %}
-                    <div class="div_user_message" style="text-align: left;">
+                    <div class="div_user_message">
                         <p>{{message.content}}</p>
-                        <p>{{message.created}}</p>
+                        <p class="p_message_created">{{message.created}}</p>
                     </div>
                 {% else %}
 <!-- MESSAGES TO USER -->
-                    <div class="div_corespondent_message" style="text-align: right;">
+                    <div class="div_corespondent_message">
                         <p>{{message.content}}</p>
-                        <p>{{message.created}}</p>
+                        <p class="p_message_created">{{message.created}}</p>
                     </div>
                 {% endif %}
+                <p style="clear:both;"></p>
             {% endfor %}
-<!-- SENDING NEW MESSAGE -->
-            <form method="post">
-                {% csrf_token %}
-                <textarea name="message_content"></textarea>
-                <button type="submit" name="send_message_button">WYŚLIJ</button>
-            </form>
         </section>
+ <!-- SENDING NEW MESSAGE -->
+        <form method="post">
+            {% csrf_token %}
+            <textarea name="message_content" style="resize: none;"></textarea>
+            <button type="submit" name="send_message_button">WYŚLIJ</button>
+        </form>
     </section>
-    {% endblock inpage %}
+    {% endblock inpage_messages %}
 </body>
 </html>

@@ -2,33 +2,99 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Posts</title>
+    <style>
+.section_content_inside {
+    padding: 10px 0;
+    margin: 0 10px;
+}
+
+.section_filters {
+    text-align: center;
+
+    padding: 5px;
+    width: 470px;
+    margin: 0 calc(50vw - 245px);
+
+    border-style: solid;
+    border-width: 3px;
+    border-color: var(--color_second);
+    box-sizing: border-box;
+}
+.div_filter_form p {
+    display:inline;
+}
+.div_filter_form_left {
+    float:left;
+    text-align: right;
+
+    width: 300px;
+}
+.div_filter_form_left > input {
+    width: 200px;
+    margin-bottom: 5px;
+}
+
+.div_filter_form_right {
+    float: right;
+    text-align: left;
+
+    width: 150px;
+}
+
+.div_filter_form_right > * {
+    margin-bottom: 5px;
+}
+.div_filter_form_right > button {
+    width: 100px;
+    height: 40px;
+    margin: 10px 25px 0 25px;
+}
+
+
+.section_posts_table {
+    width: calc(100vw - 40px);
+}
+
+
+
+    </style>
 </head>
 <body>
 <!-- EXTENDING BASE FILE WITH MENU AND FOOTER -->
     {% extends "base_page.html" %}
     {% block inpage %}
 <!-- CONTENT SECTION -->
-
-    <p>{{content.order_by}}</p>
-
-    <section class="section_content">
+    <section class="section_content_inside">
         <form method="post">
             {% csrf_token %}
     <!-- FILTERS -->
             <section class="section_filters">
                 <div class="div_filter_form">
+                    <div class="div_filter_form_left">
+                        <p>Tytuł: </p>
+                        <input type="text" name="title" placeholder="Tytuł" value="{{content.filters.title__contains}}">
+                        <br>
+                        <p>Opis: </p>
+                        <input type="text" name="description" placeholder="Opis" value="{{content.filters.description__contains}}">
+                        <br>
+                        <p>Autor: </p>
+                        <input type="text" name="author" placeholder="Autor" value="{{content.filters.author__in}}">
+                        <br>
+                        <p>Numer postu: </p>
+                        <input type="number" name="id" placeholder="Post id" value="{{content.filters.id}}">
+                    </div>
+                    <div class="div_filter_form_right">
+                        <p>Od: </p>
+                        <input type="date" name="created_after" placeholder="Data utworzenia od" value="{{content.filters.created__gt}}">
+                        <br>
+                        <p>Do: </p>
+                        <input type="date" name="created_before" placeholder="Data utworzenia do" value="{{content.filters.created__lt}}">
+                        <br>
 
-                    <input type="text" name="title" placeholder="Tytuł" value="{{content.filters.title__contains}}">
-                    <input type="text" name="description" placeholder="Opis" value="{{content.filters.description__contains}}">
-                    <input type="text" name="author" placeholder="Autor" value="{{content.filters.author__in}}">
-                    <input type="number" name="id" placeholder="Post id" value="{{content.filters.id}}">
-                    <p>Od: </p>
-                    <input type="date" name="created_after" placeholder="Data utworzenia od" value="{{content.filters.created__gt}}">
-                    <p>Do: </p>
-                    <input type="date" name="created_before" placeholder="Data utworzenia do" value="{{content.filters.created__lt}}">
-
-                    <button type="submit" name="filter_button">FILTRUJ</button>
+                        <button type="submit" name="filter_button">FILTRUJ</button>
+                    </div>
+                    <div style="clear:both"></div>
                 </div>
             </section>
 
@@ -61,8 +127,9 @@
 
 
                             {% for post in content.posts %}
+
                                 <tr>
-                                    <td>{{post.post_model.id}} </td><td><a href="../post/finished/{{post.id}}">{{post.post_model.title}}</a></td> <td>{{post.post_model.description}}</td> <td>{{post.post_model.author.username}}</td> <td>{{post.likes}}</td> <td>{{post.comments}}</td> <td>{{post.post_model.created}}</td>
+                                    <td>{{post.post_model.id}} </td><td><a href="../post/finished/{{post.post_model.id}}">{{post.post_model.title}}</a></td> <td>{{post.post_model.description}}</td> <td>{{post.post_model.author.username}}</td> <td>{{post.likes}}</td> <td>{{post.comments}}</td> <td>{{post.post_model.created}}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>

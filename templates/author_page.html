@@ -3,14 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+.section_content_inside {
+    padding: 10px;
+    min-width: 500px;
+}
+.section_information_part > .div_title {
+    font-size: 30px;
+
+    margin-left: 20px;
+}
+    </style>
+
 </head>
 <body>
 <!-- EXTENDING BASE FILE WITH MENU AND FOOTER -->
     {% extends "base_page.html" %}
     {% block inpage %}
-{{content}}
 <!-- CONTENT SECTION -->
-    <section class="section_content">
+    <section class="section_content_inside">
 <!-- AUTHOR INFORMATION -->
         <section class="section_information_part">
             <div class="div_title">
@@ -23,11 +34,23 @@
                 <p>Posty: {{content.post_count}}</p>
                 <p>Komentarze: {{content.comments_count}}</p>
 
-                {% if content.author != content.user %}
+                {% if content.author != content.user and content.user.username %}
                     <a href="../send_message/{{content.author.id}}"> <button> Wyślij wiadomość </button></a>
                 {% endif %}
             </div>
         </section>
+<!-- MESSAGES SECTION -->
+        {% if messages %}
+            <section class="section_messages">
+                {% for message in messages %}
+                    <p class="p_message">{{ message }}</p>
+                    {% if not forloop.last %}
+                        <br>
+                    {% endif %}
+                {% endfor %}
+            </section>
+        {% endif %}
+        <br>
 <!-- UNFINISHED POSTS LIST -->
         <form method="post">
             {% csrf_token %}
@@ -47,7 +70,7 @@
                                     <tr class="table_row">
                                         <td class="table_cell"><span style="white-space: pre-line">{{unfinished_post.title}}</span></td>
                                         <td class="table_cell"><span style="white-space: pre-line">{{unfinished_post.description}}</span></td>
-                                        <td class="table_cell"><a href="/edit_post/unfinished/{{unfinished_post.id}}"> Edytuj </a></td>
+                                        <td class="table_cell"><a href="/edit_post/unfinished/{{unfinished_post.id}}"><button type="button"> Edytuj </button></a></td>
                                         <td class="table_cell"><button type="submit" name="delete_unfinished_post_button" value="{{unfinished_post.id}}"> Usuń </button></td>
                                     </tr>
                                 {% endfor %}
@@ -60,6 +83,8 @@
             {% if content.user == content.author %}
                 <a href="/create_post"><button type="button" name="create_post_button">Nowy post</button></a>
             {% endif %}
+            <br>
+            <br>
 <!-- FINISHED POSTS LIST -->
             {% if content.posts %}
                 <section class="section_posts">
@@ -84,7 +109,7 @@
                                         <td class="table_cell" style="color: #FF0000;">{{post.likes_minus}}</td>
 
                                         {% if content.author == content.user %}
-                                            <td class="table_cell"><a href="/edit_post/finished/{{post.post.id}}"> Edytuj </a></td>
+                                            <td class="table_cell"><a href="/edit_post/finished/{{post.post.id}}"><button type="button" name="edit_finished_post_button" > EDIT </button></a></td>
                                             <td class="table_cell"><button type="submit" name="delete_finished_post_button" value="{{post.post.id}}"> Usuń </button></td>
                                         {% endif %}
                                     </tr>

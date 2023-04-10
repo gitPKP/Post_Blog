@@ -128,6 +128,17 @@ h2 {
     {% block inpage %}
 <!-- CONTENT SECTION -->
     <section class="section_content_inside">
+<!-- MESSAGES SECTION -->
+        {% if messages %}
+            <section class="section_messages">
+                {% for message in messages %}
+                    <p class="p_message">{{ message }}</p>
+                    {% if not forloop.last %}
+                        <br>
+                    {% endif %}
+                {% endfor %}
+            </section>
+        {% endif %}
 <!-- LAST 3 POSTS SECTION -->
         {% if content.last_3 %}
             <section class="_3_posts_section">

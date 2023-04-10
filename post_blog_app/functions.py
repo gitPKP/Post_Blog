@@ -2,10 +2,15 @@ from bs4 import BeautifulSoup
 import requests
 from random import choice
 from copy import copy
+from re import split as re_split
 
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+
+
+from django_app.settings import env
+
 
 url = 'https://lubimyczytac.pl/cytaty?page=1&listId=quoteListFull&tab=All&phrase=&sortBy=new&paginatorType=Standard'
 
@@ -34,10 +39,10 @@ def gain_quote(url='https://lubimyczytac.pl/cytaty?page=1&listId=quoteListFull&t
 
 
 def send_mail(email, username, code, url):
-    port = 587  # 587 465-ssl
-    smtp_server = 'smtp.gmail.com'
-    mail_sender = 'pomocnicze.konto.pocztowe@gmail.com'
-    password = 'hhjbzpgkbiqxincf'
+    port = int(env('MAIL_PORT'))  # 587 465-ssl
+    smtp_server = env('MAIL_SMTP_SERVER')
+    mail_sender = env('MAIL_SENDER')
+    password = env('MAIL_PASSWORD')
     mail_reciver = email
 
     print(url)
@@ -138,3 +143,73 @@ def get_comments(id_post, content, Posts, Comment, Comment_to_Comment):
             n += 1
 
     return content
+
+
+# New sorting including alfanumerical sort
+def my_sort(sort_var, sorting_list, prefix=''):
+    '''
+    New sorting including alfanumerical sort
+    :param sort_var: '-parametr' (transformed from sort_way and sort_by -> see first if)
+    :param sorting_list: list of dicts with models and extended parameters
+    :param prefix: dict key of model if we sort by it (Optional)
+    :return:
+    '''
+    # Transform '-parametr' into sort_way=ASC/DESC and sort_by=parametr
+    if sort_var[0] == '-':
+        sort_way = 'DESC'
+        sort_by = sort_var[1:]
+    else:
+        sort_way = 'ASC'
+        sort_by = sort_var
+
+    if sort_by and sort_way:
+        new_list = []
+        sort_words = []
+        lengths = []
+
+        # Creating list of alfababetical and numerical parts ['AB', '12', 'ERT', '34', ' tyu ']
+        for list_line in sorting_list:
+            if prefix:
+                sort_word = re_split(r'(\d+)', str(list_line[prefix].__getattribute__(sort_by)))
+            else:
+                sort_word = re_split(r'(\d+)', str(list_line[sort_by]))
+            sort_word = list(filter(''.__ne__, sort_word))
+            sort_words.append(sort_word)
+
+            # Extending lengths list to length equal the longest sort_word
+            while len(sort_word) > len(lengths):
+                lengths.append(0)
+
+            # Update lengths list if any part is longer then earlier longest
+            for n, part in enumerate(sort_word):
+                if len(part) > lengths[n]:
+                    lengths[n] = len(part)
+
+        # Adding paces (' ') to sort_words (to numbers on left, to letters on right)
+        for i, sort_word in enumerate(sort_words):
+            for n, word in enumerate(sort_word):
+                try:
+                    int(word)
+                    while len(word) < lengths[n]:
+                        word = ' ' + word
+                    sort_words[i][n] = word
+                except:
+                    while len(word) < lengths[n]:
+                        word = word + ' '
+                    sort_words[i][n] = word
+
+            # Creating list of dicts to sort by 'sort' key. 'model' contains model.User object
+            new_list.append({'list_line': sorting_list[i], 'sort': ''.join(sort_words[i])})
+
+        # Sort with direction
+        if sort_way == 'ASC':
+            new_list = sorted(new_list, key=lambda k: k['sort'])
+        elif sort_way == 'DESC':
+            new_list = sorted(new_list, key=lambda k: k['sort'], reverse=True)
+
+        # Create sorted list to return
+        return_list = []
+        for element in new_list:
+            return_list.append(element['list_line'])
+
+    return return_list
