@@ -36,11 +36,8 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['www.post-blog-tomu.onrender.com']
 
-RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-if RENDER_EXTERNAL_HOSTNAME:    
-   ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 LOGGING = {
    'version': 1,
