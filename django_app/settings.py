@@ -38,6 +38,24 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['www.post-blog-tomu.onrender.com/']
 
+LOGGING = {
+   'version': 1,
+   'disable_existing_loggers': False,
+   'handlers': {
+      'file': {
+         'level': 'DEBUG',
+         'class': 'logging.FileHandler',
+         'filename': '/tmp/debug.log',
+      },
+   },
+   'loggers': {
+      'django': {
+         'handlers': ['file'],
+         'level': 'DEBUG',
+         'propagate': True,
+      },
+   },
+}
 
 # Application definition
 
